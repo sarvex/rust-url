@@ -41,12 +41,11 @@ def strtab_slice(s):
 
     if s in strtab:
         return strtab[s]
-    else:
-        utf8_len = len(s.encode('utf8'))
-        c = (strtab_offset, utf8_len)
-        strtab[s] = c
-        strtab_offset += utf8_len
-        return c
+    utf8_len = len(s.encode('utf8'))
+    c = (strtab_offset, utf8_len)
+    strtab[s] = c
+    strtab_offset += utf8_len
+    return c
 
 def rust_slice(s):
     start = s[0]
@@ -164,7 +163,7 @@ for ranges in optimized_ranges:
     offset += block_len
 
     start = escape_char(char(ranges[0][0]))
-    print("    ('%s', %s)," % (start, index))
+    print(f"    ('{start}', {index}),")
 
 print("];\n")
 
@@ -174,7 +173,7 @@ for ranges in optimized_ranges:
     for (first, last, mapping, unicode_str) in ranges:
         if unicode_str is not None:
             mapping += rust_slice(strtab_slice(unicode_str))
-        print("    %s," % mapping)
+        print(f"    {mapping},")
 
 print("];\n")
 
